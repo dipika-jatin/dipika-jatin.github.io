@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Events from '../components/Events.astro';
+import Story from '../components/Story.astro';
+import Venues from '../components/Venues.astro';
+import SaveTheDate from '../components/SaveTheDate.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout>
+  <div id="site">
+    <Nav />
+    <main>
+      <Hero />
+      <Events />
+      <Story />
+      <Venues />
+      <SaveTheDate />
+    </main>
+    <Footer />
+  </div>
+</BaseLayout>
+
+<script>
+  // — Scroll-reveal helper (shared across all sections) —
+  const obs = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('on');
+          obs.unobserve(e.target);
+        }
+      }
+    },
+    { threshold: 0.15 }
+  );
+
+  document.querySelectorAll('.rv, .evi').forEach((el) => obs.observe(el));
+</script>

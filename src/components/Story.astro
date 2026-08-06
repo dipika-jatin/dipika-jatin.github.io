@@ -1,0 +1,386 @@
+---
+/**
+ * "Our Story" — visual-heavy editorial spread.
+ *
+ * Wide panorama opener + memory cards. Every tile is a pure image — no
+ * on-screen title or caption text. Captions live on as `alt` for screen
+ * readers and as a quiet hover tooltip via `title`, but never become
+ * visible page copy. All artwork lives in /public/story/ and is produced
+ * from per-card source illustrations via scripts/extract-story.mjs.
+ */
+type Memory = { slug: string; hover: string; alt: string };
+
+const memories: Memory[] = [
+  {
+    slug: 'school',
+    hover: 'School days',
+    alt: 'A wooden desk by a sunlit window, an open notebook with a pen, paper plane and books, the Birla Bharati school building visible outside.',
+  },
+  {
+    slug: 'pani',
+    hover: 'Pani puri',
+    alt: 'A boy reacting to spicy pani puri at a Kolkata street stall while a girl laughs beside him, the Victoria Memorial in the background.',
+  },
+  {
+    slug: 'distance',
+    hover: 'Across cities',
+    alt: 'A map of India with two glowing location pins joined by a dotted heart and chat icons, framed by little study-desk scenes from both cities.',
+  },
+  {
+    slug: 'growing',
+    hover: 'Growing together',
+    alt: 'A wooden desk with a laptop, plant and books beside an open journal and a coffee cup.',
+  },
+  {
+    slug: 'match',
+    hover: 'Match night',
+    alt: 'Two friends in Argentina jerseys cheering with raised fists as their team celebrates on the television.',
+  },
+  {
+    slug: 'skyline',
+    hover: 'Same skyline',
+    alt: 'A couple walking hand in hand on a flower-lined path lit with festival lights, the Charminar rising in the distance at sunset.',
+  },
+  {
+    slug: 'forever',
+    hover: 'Forever',
+    alt: 'A couple in traditional Indian attire pausing together inside an ancient sandstone temple, carved walls and a Nandi statue beside them and the temple spires rising into a soft blue sky.',
+  },
+];
+---
+
+<section id="story" aria-labelledby="story-title">
+  <header class="story-head">
+    <p class="seye rv">Our Journey</p>
+    <h2 id="story-title" class="stitle rv d1">Our Story</h2>
+    <div class="sdiv rv d2" aria-hidden="true">
+      <div class="sdivl"></div>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+        <path
+          d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2L8 0Z"
+          fill="var(--gold)"
+        />
+      </svg>
+      <div class="sdivl"></div>
+    </div>
+  </header>
+
+  {/* — Panorama: full journey at a glance.
+       Desktop scales it inside the max-width frame; mobile keeps it at
+       a comfortable height inside a horizontally scrollable container so
+       the watercolor detail stays readable instead of shrinking to mush. */}
+  <figure class="pano-wrap rv">
+    <div class="pano-scroll">
+      <img
+        class="pano-img"
+        src="/story/panorama.jpg"
+        alt="An illustrated panorama of our journey — from a Kolkata classroom to long-distance years, shared desks, the Charminar in Hyderabad, and a flower-wrapped forever."
+        width="1024"
+        height="296"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <span class="pano-hint" aria-hidden="true">
+      <span class="pano-hint-txt">Swipe</span>
+      <span class="pano-hint-chevrons">
+        <svg viewBox="0 0 24 24" width="14" height="14"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 24 24" width="14" height="14"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </span>
+  </figure>
+
+  {/* — Memory cards.
+       Flexbox + justify-content: center gives us a natural 4 + 3 layout
+       on wide desktops (last row centred for free), drops to 3 / 2 / 1
+       at narrower breakpoints. */}
+  <ol class="mems" role="list">
+    {memories.map((m, idx) => (
+      <li
+        class="mem"
+        style={`--mem-delay: ${idx * 70}ms`}
+        title={m.hover}
+      >
+        <img
+          src={`/story/card-${m.slug}.jpg`}
+          alt={m.alt}
+          width="620"
+          height="775"
+          loading="lazy"
+          decoding="async"
+        />
+      </li>
+    ))}
+  </ol>
+
+  <footer class="story-end rv">
+    <div class="end-rule" aria-hidden="true"></div>
+    <p class="end-line">And now, we get to celebrate the next chapter with you.</p>
+  </footer>
+</section>
+
+<style>
+  #story {
+    background: var(--ivory);
+    padding: clamp(60px, 10vw, 100px) 0 clamp(70px, 11vw, 110px);
+    overflow: hidden;
+  }
+
+  .story-head {
+    text-align: center;
+    padding: 0 clamp(20px, 5vw, 48px);
+    margin-bottom: clamp(36px, 6vw, 56px);
+  }
+
+  /* ── Panorama ────────────────────────────────────────────────────────── */
+  .pano-wrap {
+    position: relative;
+    max-width: 1180px;
+    margin: 0 auto clamp(56px, 8vw, 88px);
+    padding: 0 clamp(20px, 5vw, 48px);
+  }
+  .pano-scroll {
+    position: relative;
+    border-radius: 14px;
+    background: var(--cream);
+    box-shadow:
+      0 1px 0 rgba(200, 169, 110, 0.45) inset,
+      0 24px 60px -32px rgba(58, 46, 31, 0.35),
+      0 2px 10px -4px rgba(58, 46, 31, 0.08);
+    outline: 1px solid rgba(200, 169, 110, 0.32);
+    overflow: hidden;
+  }
+  .pano-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  /* A floating pill badge, not a quiet caption — sits on top of the image
+     itself (not tucked below it) so it reads as a UI affordance rather
+     than decoration, with an animated double-chevron that visibly
+     "nudges" sideways to suggest the swipe gesture. It fades away the
+     moment the visitor actually scrolls the panorama, since its job is
+     done once they've discovered it. */
+  .pano-hint {
+    display: none;
+    position: absolute;
+    right: clamp(14px, 4vw, 24px);
+    bottom: 14px;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 10px 8px 16px;
+    border-radius: 999px;
+    background: rgba(44, 36, 22, 0.82);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    color: var(--ivory);
+    box-shadow: 0 8px 20px -8px rgba(44, 36, 22, 0.6);
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .pano-hint.show {
+    opacity: 1;
+    animation: pano-hint-in 0.5s var(--ease) both;
+  }
+  .pano-hint-txt {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+  .pano-hint-chevrons {
+    display: inline-flex;
+    align-items: center;
+    margin-left: -4px;
+  }
+  .pano-hint-chevrons svg {
+    color: var(--gold-l);
+    animation: pano-chevron 1.4s ease-in-out infinite;
+  }
+  .pano-hint-chevrons svg:nth-child(1) { margin-right: -8px; animation-delay: 0s; }
+  .pano-hint-chevrons svg:nth-child(2) { animation-delay: 0.18s; }
+
+  @keyframes pano-hint-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pano-chevron {
+    0%, 100% { opacity: 0.35; transform: translateX(0); }
+    50%      { opacity: 1; transform: translateX(4px); }
+  }
+
+  @media (max-width: 760px) {
+    .pano-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -webkit-mask-image: linear-gradient(90deg, #000 0, #000 92%, transparent 100%);
+              mask-image: linear-gradient(90deg, #000 0, #000 92%, transparent 100%);
+    }
+    .pano-scroll::-webkit-scrollbar { display: none; }
+    .pano-img {
+      width: auto;
+      height: clamp(220px, 60vw, 300px);
+      max-width: none;
+    }
+    .pano-hint { display: inline-flex; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pano-hint-chevrons svg { animation: none; opacity: 0.8; }
+  }
+
+  /* ── Memory cards ────────────────────────────────────────────────────── */
+  .mems {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 5vw, 48px);
+    max-width: 1180px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(20px, 2.6vw, 32px);
+  }
+
+  /* Each .mem is now the image itself — no title, no caption.
+     Flex 1 1 220px with a max-width keeps 4 per row at wide desktop
+     (with the bottom row auto-centred by justify-content), reflowing
+     to 3 → 2 → 1 columns at narrower breakpoints. */
+  .mem {
+    flex: 1 1 220px;
+    max-width: 260px;
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--cream);
+    box-shadow:
+      0 1px 0 rgba(200, 169, 110, 0.4) inset,
+      0 14px 30px -18px rgba(58, 46, 31, 0.35),
+      0 2px 6px -2px rgba(58, 46, 31, 0.08);
+    outline: 1px solid rgba(200, 169, 110, 0.3);
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.9s var(--ease) var(--mem-delay, 0ms),
+      transform 0.45s var(--ease),
+      box-shadow 0.45s var(--ease);
+  }
+  .mem.in-view {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.9s var(--ease) var(--mem-delay, 0ms),
+      transform 0.9s var(--ease) var(--mem-delay, 0ms),
+      box-shadow 0.45s var(--ease);
+  }
+  .mem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .mem.in-view:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 1px 0 rgba(200, 169, 110, 0.5) inset,
+        0 22px 38px -18px rgba(58, 46, 31, 0.42),
+        0 4px 10px -4px rgba(58, 46, 31, 0.12);
+    }
+  }
+  @media (max-width: 760px) {
+    .mem { max-width: none; flex: 1 1 calc(50% - 12px); }
+  }
+  @media (max-width: 440px) {
+    .mem { flex: 1 1 100%; max-width: 320px; }
+  }
+
+  /* ── Closing ─────────────────────────────────────────────────────────── */
+  .story-end {
+    text-align: center;
+    margin: clamp(56px, 8vw, 88px) auto 0;
+    max-width: 640px;
+    padding: 0 clamp(20px, 5vw, 48px);
+  }
+  .end-rule {
+    width: 56px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.55;
+    margin: 0 auto clamp(20px, 3vw, 26px);
+  }
+  .end-line {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(17px, 2vw, 21px);
+    color: var(--gold-d);
+    line-height: 1.55;
+    letter-spacing: 0.01em;
+    margin: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mem {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  const cards = document.querySelectorAll('#story .mem');
+  if (cards.length > 0 && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add('in-view');
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.18, rootMargin: '0px 0px -8% 0px' }
+    );
+    cards.forEach((c) => io.observe(c));
+  } else {
+    cards.forEach((c) => c.classList.add('in-view'));
+  }
+
+  // Swipe hint: appear once the panorama scrolls into view, then fade
+  // away the moment the visitor actually swipes it — no point nagging
+  // once they've found it.
+  const panoScroll = document.querySelector<HTMLElement>('.pano-scroll');
+  const panoHint = document.querySelector<HTMLElement>('.pano-hint');
+  if (panoScroll && panoHint) {
+    if ('IntersectionObserver' in window) {
+      const hintIo = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              panoHint.classList.add('show');
+              hintIo.disconnect();
+            }
+          }
+        },
+        { threshold: 0.4 }
+      );
+      hintIo.observe(panoScroll);
+    } else {
+      panoHint.classList.add('show');
+    }
+
+    panoScroll.addEventListener(
+      'scroll',
+      () => {
+        panoHint.classList.remove('show');
+      },
+      { passive: true, once: true }
+    );
+  }
+</script>

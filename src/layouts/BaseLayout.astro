@@ -1,0 +1,96 @@
+---
+import '../styles/global.css';
+import { wedding } from '../data/wedding';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${wedding.bride} & ${wedding.groom} — ${wedding.dateLabel}`,
+  description = `${wedding.bride} and ${wedding.groom} are getting married on ${wedding.dateLabel} in ${wedding.city}. Join us to celebrate.`,
+} = Astro.props;
+
+const ogImage = new URL('/og-image.jpg', wedding.siteUrl).toString();
+const canonical = new URL(Astro.url.pathname, wedding.siteUrl).toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- SVG favicon for browsers that support it, with PNG/ICO fallbacks
+         for the ones that don't (notably Safari, which never renders SVG
+         favicons in the tab bar — this was the "favicon doesn't load"
+         issue on GitHub Pages). Browsers pick the best format they can
+         handle from these; /favicon.ico also covers tools that probe that
+         exact path by convention, independent of any <link> tag. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#F5F0E6" />
+
+    <!-- Open Graph (WhatsApp, Facebook, iMessage) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${wedding.bride} & ${wedding.groom} wedding invitation`} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={`${wedding.bride} & ${wedding.groom}`} />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter / X large card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Fonts: Cormorant Garamond (display serif) + Jost (sans, tracked caps) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap"
+    />
+
+    <!-- Schema.org structured data for the wedding event -->
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Event',
+        name: `${wedding.bride} & ${wedding.groom} — Wedding`,
+        startDate: wedding.dateIso,
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        eventStatus: 'https://schema.org/EventScheduled',
+        location: {
+          '@type': 'Place',
+          name: wedding.city,
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: wedding.city,
+            addressCountry: wedding.country,
+          },
+        },
+        description,
+        image: ogImage,
+        url: canonical,
+      })}
+    />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

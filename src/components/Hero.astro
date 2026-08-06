@@ -1,0 +1,327 @@
+---
+import { wedding } from '../data/wedding';
+import Countdown from './Countdown.astro';
+---
+
+<section id="hero" aria-labelledby="hero-title">
+  <div class="hero-bg" aria-hidden="true"></div>
+
+  <div class="hero-card">
+    <img
+      class="hero-jasmine"
+      src="/jasmine.jpg"
+      alt=""
+      aria-hidden="true"
+      width="553"
+      height="1024"
+      loading="eager"
+      decoding="async"
+    />
+
+    <div class="hero-content">
+      <p class="hero-eye">Together with our families</p>
+      <h1 id="hero-title" class="hero-names">
+        <span class="hero-name">{wedding.bride}</span>
+        <span class="hero-and">and</span>
+        <span class="hero-name">{wedding.groom}</span>
+      </h1>
+      <div class="hero-rule" aria-hidden="true"></div>
+      <p class="hero-date">{wedding.dateLabel}</p>
+      <p class="hero-loc">{wedding.city.toUpperCase()} &middot; {wedding.country.toUpperCase()}</p>
+    </div>
+  </div>
+
+  <div class="hero-utility">
+    <Countdown />
+  </div>
+
+  <a class="hero-scue" href="#events" aria-label="Scroll to the events section">
+    <span class="hero-scue-txt">Scroll</span>
+    <span class="hero-scue-line" aria-hidden="true"></span>
+  </a>
+</section>
+
+<style>
+  #hero {
+    /* `100vh` on mobile (Chrome/Samsung Internet on Android — e.g. the
+       Galaxy S25 Ultra) is taller than what's actually visible with the
+       address bar showing, so the hero used to overflow past the real
+       "first screen", forcing an extra scroll before the address bar
+       collapses. `100svh` (small viewport height) is pinned to the
+       smallest, always-visible viewport, so the hero reliably fits on
+       screen from first paint. Falls back to 100vh where svh isn't
+       supported. */
+    min-height: 100vh;
+    min-height: 100svh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    padding-top: 78px; /* clears the fixed nav; sides/bottom are owned by .hero-card / .hero-utility */
+  }
+
+  /* Warm paper-grain background, matching the envelope card */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 45% at 50% 8%, rgba(200, 169, 110, 0.07) 0%, transparent 65%),
+      radial-gradient(ellipse 60% 55% at 12% 90%, rgba(123, 36, 53, 0.05) 0%, transparent 65%),
+      radial-gradient(ellipse 55% 45% at 88% 70%, rgba(200, 169, 110, 0.06) 0%, transparent 65%),
+      var(--ivory);
+    z-index: 0;
+  }
+
+  /* — Asymmetric card-style layout: jasmine left, content right — */
+  .hero-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: clamp(48px, 8vh, 80px) clamp(20px, 5vw, 60px) clamp(28px, 4vh, 48px);
+    display: grid;
+    grid-template-columns: minmax(180px, 28%) 1fr;
+    align-items: center;
+    gap: clamp(28px, 5vw, 70px);
+  }
+
+  .hero-jasmine {
+    width: 100%;
+    max-height: 56vh;
+    height: auto;
+    object-fit: contain;
+    /* darken removes pixels lighter than the page; the radial mask softens
+       the JPG's outer rectangle so its edges fade smoothly into ivory
+       instead of showing as a visible box. */
+    mix-blend-mode: darken;
+    -webkit-mask: radial-gradient(ellipse 78% 88% at 50% 50%, #000 58%, transparent 96%);
+    mask: radial-gradient(ellipse 78% 88% at 50% 50%, #000 58%, transparent 96%);
+    opacity: 0;
+    animation: fade-up 1.4s var(--ease) 0.2s forwards;
+    will-change: transform;
+  }
+
+  .hero-content {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-eye {
+    font-family: var(--sans);
+    font-size: clamp(9.5px, 1.2vw, 11.5px);
+    font-weight: 400;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--gold-d);
+    margin-bottom: clamp(22px, 4vh, 36px);
+    opacity: 0;
+    animation: fade-up 1s ease 0.4s forwards;
+  }
+
+  .hero-names {
+    margin: 0;
+    opacity: 0;
+    animation: fade-up 1s ease 0.55s forwards;
+  }
+
+  .hero-name {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(56px, 9.5vw, 124px);
+    color: var(--wine);
+    line-height: 0.92;
+    display: block;
+    letter-spacing: -0.005em;
+  }
+
+  .hero-and {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(18px, 2.6vw, 28px);
+    color: var(--gold-d);
+    letter-spacing: 0.03em;
+    display: block;
+    margin: clamp(6px, 1.2vh, 12px) 0 clamp(6px, 1.2vh, 12px) clamp(8px, 1.4vw, 14px);
+  }
+
+  .hero-rule {
+    width: clamp(56px, 8vw, 84px);
+    height: 1px;
+    background: var(--gold);
+    margin: clamp(24px, 4vh, 36px) 0 clamp(16px, 2.4vh, 22px);
+    opacity: 0;
+    animation: fade-up 1s ease 0.75s forwards, hero-rule-fade 0s ease 1.75s forwards;
+  }
+
+  .hero-date {
+    font-family: var(--sans);
+    font-size: clamp(11px, 1.5vw, 13px);
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    color: var(--wine);
+    margin-bottom: clamp(6px, 1vh, 8px);
+    opacity: 0;
+    animation: fade-up 1s ease 0.9s forwards;
+  }
+
+  .hero-loc {
+    font-family: var(--sans);
+    font-size: clamp(9.5px, 1.2vw, 11px);
+    font-weight: 300;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold-d);
+    opacity: 0;
+    animation: fade-up 1s ease 1.05s forwards;
+  }
+
+  /* — Utility row (countdown + share/calendar buttons) — */
+  .hero-utility {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 5vw, 60px) clamp(60px, 8vh, 90px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(18px, 3vw, 26px);
+  }
+
+  /* — Scroll cue (anchor jump) — */
+  .hero-scue {
+    position: absolute;
+    bottom: clamp(20px, 3.5vh, 32px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    opacity: 0;
+    animation: fade-up 1s ease 1.8s forwards;
+    z-index: 2;
+  }
+
+  .hero-scue-txt {
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold-d);
+  }
+
+  .hero-scue-line {
+    width: 1px;
+    height: 36px;
+    background: linear-gradient(180deg, var(--gold), transparent);
+    animation: scue 2s ease-in-out infinite;
+  }
+
+  .hero-scue:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 6px;
+    border-radius: 2px;
+  }
+
+  /* — Animations — */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes hero-rule-fade {
+    to { opacity: 0.7; }
+  }
+  @keyframes scue {
+    0%   { transform: scaleY(0); transform-origin: top; }
+    50%  { transform: scaleY(1); transform-origin: top; }
+    51%  { transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* — Mobile: stack vertically, jasmine sits above the names as a small
+     decorative accent. The radial-gradient mask on .hero-jasmine fades its
+     JPG edges to transparent, so it no longer shows a visible rectangle
+     against the ivory page — just the jasmine illustration, softly fading
+     into the page like the torn-paper reference. — */
+  @media (max-width: 800px) {
+    .hero-card {
+      grid-template-columns: 1fr;
+      gap: clamp(16px, 3vh, 24px);
+      padding-top: clamp(60px, 8vh, 84px);
+      padding-bottom: clamp(20px, 4vh, 32px);
+    }
+
+    /* Tighter floor than the desktop clamp(60px, 8vh, 90px) — on short
+       mobile viewports (address bar visible) every saved pixel here
+       keeps the whole hero inside the first screen instead of spilling
+       a few px past it. */
+    .hero-utility {
+      padding-bottom: clamp(28px, 5vh, 60px);
+    }
+
+    .hero-jasmine {
+      max-height: 26vh;
+      max-width: 170px;
+      margin: 0 auto;
+    }
+
+    .hero-content {
+      text-align: center;
+      align-items: center;
+    }
+
+    .hero-and {
+      margin-left: 0;
+    }
+
+    .hero-rule {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-jasmine, .hero-eye, .hero-names, .hero-rule,
+    .hero-date, .hero-loc, .hero-scue {
+      animation: none;
+      opacity: 1;
+    }
+    .hero-rule { opacity: 0.7; }
+  }
+</style>
+
+<script>
+  // Subtle parallax drift on the hero jasmine. As the page scrolls past the
+  // hero, the jasmine drifts upward at ~5% of scroll, capped at -15px so it
+  // never breaks composition. Passive listener + rAF for 60fps. Disabled
+  // when prefers-reduced-motion is set.
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const jasmine = document.querySelector<HTMLImageElement>('.hero-jasmine');
+
+  if (jasmine && !reduce) {
+    let ticking = false;
+    const update = () => {
+      const drift = Math.max(-15, -window.scrollY * 0.05);
+      jasmine.style.transform = `translateY(${drift.toFixed(2)}px)`;
+      ticking = false;
+    };
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+      },
+      { passive: true }
+    );
+    update();
+  }
+</script>
