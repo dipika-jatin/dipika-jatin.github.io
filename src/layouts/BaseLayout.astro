@@ -73,6 +73,7 @@ const canonical = new URL(Astro.url.pathname, wedding.siteUrl).toString();
         '@type': 'Event',
         name: `${wedding.bride} & ${wedding.groom} — Wedding`,
         startDate: wedding.dateIso,
+        endDate: '2026-11-22T02:00:00+05:30', // Wedding Ceremony night runs past midnight into the 22nd
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
         eventStatus: 'https://schema.org/EventScheduled',
         location: {

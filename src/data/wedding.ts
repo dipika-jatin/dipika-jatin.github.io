@@ -9,17 +9,19 @@ export const wedding = {
   monogram: 'D & J',
 
   /**
-   * Wedding ceremony start, pinned to Asia/Kolkata (IST = UTC+05:30).
-   * The +05:30 offset is what makes the countdown identical for guests
-   * in any timezone — the JS Date object resolves to one absolute UTC
-   * instant regardless of where the browser is. Matches the Wedding
-   * Ceremony start time (9 PM) on the itinerary.
+   * Celebrations begin — Guest Check-in & Welcome Breakfast on the 20th,
+   * pinned to Asia/Kolkata (IST = UTC+05:30). This is a two-day event
+   * (Haldi & Sangeet on the 20th, Mehendi/Varmala/Wedding on the 21st), so
+   * the countdown targets the start of the *first* day, not just the
+   * Wedding Ceremony. The +05:30 offset is what makes the countdown
+   * identical for guests in any timezone — the JS Date object resolves to
+   * one absolute UTC instant regardless of where the browser is.
    */
-  dateIso: '2026-11-21T21:00:00+05:30',
+  dateIso: '2026-11-20T11:00:00+05:30',
 
   /** Display strings — keep these in sync with dateIso when you edit it. */
-  dateLabel: '21 NOVEMBER 2026',
-  dateShort: '21.11.26',
+  dateLabel: '20 & 21 NOVEMBER 2026',
+  dateShort: '20\u201321.11.26',
 
   /**
    * Used for all-day calendar entries (YYYYMMDD). Spans both celebration

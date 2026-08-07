@@ -6,7 +6,21 @@ import { wedding } from '../data/wedding';
   <a href="#hero" class="nmono" aria-label={`${wedding.bride} and ${wedding.groom} — home`}>
     {wedding.monogram}
   </a>
-  <ul class="nlinks">
+
+  <button
+    class="nburger"
+    id="nburger"
+    type="button"
+    aria-label="Menu"
+    aria-expanded="false"
+    aria-controls="nlinks"
+  >
+    <span class="nburger-line" aria-hidden="true"></span>
+    <span class="nburger-line" aria-hidden="true"></span>
+    <span class="nburger-line" aria-hidden="true"></span>
+  </button>
+
+  <ul class="nlinks" id="nlinks">
     <li><a href="#events">Events</a></li>
     <li><a href="#story">Our Story</a></li>
     <li><a href="#venue">Venues</a></li>
@@ -72,8 +86,95 @@ import { wedding } from '../data/wedding';
     outline-offset: 4px;
   }
 
-  @media (max-width: 600px) {
-    .nlinks { display: none; }
+  /* — Hamburger toggle (hidden until the nav links no longer fit) — */
+  .nburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 36px;
+    height: 36px;
+    margin: -6px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    z-index: 101;
+  }
+
+  .nburger-line {
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: var(--wine);
+    transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+  }
+
+  .nburger[aria-expanded='true'] .nburger-line:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .nburger[aria-expanded='true'] .nburger-line:nth-child(2) {
+    opacity: 0;
+  }
+  .nburger[aria-expanded='true'] .nburger-line:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  .nburger:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  /* Below this, "Save the Date" starts crowding the monogram with no
+     breathing room (measured: they touch with zero gap around ~390px) —
+     so this is where the links give way to a hamburger, as late as
+     comfortably possible rather than at an arbitrary tablet width. */
+  @media (max-width: 479px) {
+    .nburger {
+      display: inline-flex;
+    }
+
+    .nlinks {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(18px, 5vh, 26px);
+      padding: 28px clamp(20px, 6vw, 40px) clamp(32px, 8vh, 44px);
+      margin: 0;
+      /* Fully opaque (unlike the translucent nav bar itself) — this panel
+         sits directly over the large hero names/flower, and anything less
+         than solid lets them ghost through the blur. */
+      background: var(--ivory);
+      border-bottom: 1px solid rgba(200, 169, 110, 0.18);
+      box-shadow: 0 16px 32px -20px rgba(44, 36, 22, 0.25);
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+    }
+
+    .nlinks.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .nlinks a {
+      font-size: 12px;
+      letter-spacing: 0.24em;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nburger-line,
+    .nlinks {
+      transition: none;
+    }
   }
 </style>
 
@@ -82,5 +183,38 @@ import { wedding } from '../data/wedding';
   const nav = document.getElementById('mn');
   window.addEventListener('scroll', () => {
     nav?.classList.toggle('sc', window.scrollY > 50);
+  });
+
+  // Hamburger menu: toggle on click, close on link click / outside click /
+  // Escape / resize back above the breakpoint (so it never gets stuck open
+  // if the menu was open on a phone and the viewport later grows).
+  const burger = document.getElementById('nburger');
+  const links = document.getElementById('nlinks');
+
+  function closeMenu() {
+    burger?.setAttribute('aria-expanded', 'false');
+    links?.classList.remove('open');
+  }
+
+  burger?.addEventListener('click', () => {
+    const isOpen = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', String(!isOpen));
+    links?.classList.toggle('open', !isOpen);
+  });
+
+  links?.querySelectorAll('a').forEach((a) => {
+    a.addEventListener('click', closeMenu);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (e.target instanceof Node && nav && !nav.contains(e.target)) closeMenu();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 480) closeMenu();
   });
 </script>

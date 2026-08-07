@@ -18,6 +18,22 @@ import Countdown from './Countdown.astro';
       decoding="async"
     />
 
+    <!-- Mobile-only: a faint corner sprig standing in for the full flower
+         (hidden on mobile — see .hero-jasmine below) so the card isn't
+         pure typography on a flat field. Reuses the same asset/technique
+         as .hero-jasmine (darken blend + mask), just far smaller/fainter
+         and tucked into a corner where it can't compete with the text. -->
+    <img
+      class="hero-corner-flourish"
+      src="/jasmine.jpg"
+      alt=""
+      aria-hidden="true"
+      width="553"
+      height="1024"
+      loading="lazy"
+      decoding="async"
+    />
+
     <div class="hero-content">
       <p class="hero-eye">Together with our families</p>
       <h1 id="hero-title" class="hero-names">
@@ -56,21 +72,39 @@ import Countdown from './Countdown.astro';
     position: relative;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding-top: 78px; /* clears the fixed nav; sides/bottom are owned by .hero-card / .hero-utility */
+    padding-top: 78px; /* clears the fixed nav; sides are owned by .hero-card / .hero-utility */
+    padding-bottom: clamp(20px, 3vh, 32px); /* guaranteed clear space below the scroll cue */
   }
 
-  /* Warm paper-grain background, matching the envelope card */
+  /* Warm background wash, matching the envelope card. The gradients alone
+     read as flat colour once the flower is gone on mobile — .hero-bg::after
+     below adds the actual "paper-grain" texture the comment always
+     promised: a fine SVG noise tile, multiplied in at ~4% strength so it
+     reads as tooth-of-paper, not as visible static. */
   .hero-bg {
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse 70% 45% at 50% 8%, rgba(200, 169, 110, 0.07) 0%, transparent 65%),
-      radial-gradient(ellipse 60% 55% at 12% 90%, rgba(123, 36, 53, 0.05) 0%, transparent 65%),
-      radial-gradient(ellipse 55% 45% at 88% 70%, rgba(200, 169, 110, 0.06) 0%, transparent 65%),
+      radial-gradient(ellipse 70% 45% at 50% 8%, rgba(200, 169, 110, 0.1) 0%, transparent 65%),
+      radial-gradient(ellipse 60% 55% at 12% 90%, rgba(123, 36, 53, 0.07) 0%, transparent 65%),
+      radial-gradient(ellipse 55% 45% at 88% 70%, rgba(200, 169, 110, 0.09) 0%, transparent 65%),
       var(--ivory);
     z-index: 0;
+  }
+
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Inline SVG feTurbulence noise, tiled — no image request, scales
+       losslessly, and costs nothing to tweak (baseFrequency = grain size). */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    opacity: 0.045;
+    mix-blend-mode: multiply;
   }
 
   /* — Asymmetric card-style layout: jasmine left, content right — */
@@ -101,6 +135,13 @@ import Countdown from './Countdown.astro';
     opacity: 0;
     animation: fade-up 1.4s var(--ease) 0.2s forwards;
     will-change: transform;
+  }
+
+  /* Hidden on desktop — the real .hero-jasmine already fills this role
+     there. Only takes over as a faint accent once .hero-jasmine hides on
+     mobile (see media query below). */
+  .hero-corner-flourish {
+    display: none;
   }
 
   .hero-content {
@@ -187,19 +228,21 @@ import Countdown from './Countdown.astro';
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
-    padding: 0 clamp(20px, 5vw, 60px) clamp(60px, 8vh, 90px);
+    padding: 0 clamp(20px, 5vw, 60px);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: clamp(18px, 3vw, 26px);
   }
 
-  /* — Scroll cue (anchor jump) — */
+  /* — Scroll cue (anchor jump) —
+     Sits in normal flow after .hero-utility (not absolutely pinned to the
+     section bottom) so it can never overlap the countdown: on short
+     viewports the centred flex content plus this cue simply grows the
+     section past 100svh instead of stacking on top of the countdown. */
   .hero-scue {
-    position: absolute;
-    bottom: clamp(20px, 3.5vh, 32px);
-    left: 50%;
-    transform: translateX(-50%);
+    align-self: center;
+    margin-top: clamp(14px, 2.5vh, 24px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -246,31 +289,56 @@ import Countdown from './Countdown.astro';
     100% { transform: scaleY(0); transform-origin: bottom; }
   }
 
-  /* — Mobile: stack vertically, jasmine sits above the names as a small
-     decorative accent. The radial-gradient mask on .hero-jasmine fades its
-     JPG edges to transparent, so it no longer shows a visible rectangle
-     against the ivory page — just the jasmine illustration, softly fading
-     into the page like the torn-paper reference. — */
+  /* — Mobile: no flower — pure typography. The names/date/location block
+     is vertically centred in whatever space is left above the countdown
+     (via #hero's flex-start + .hero-card's flex:1), instead of just
+     flowing top-down under the nav. .hero-utility and .hero-scue keep
+     their natural size and sit anchored below it. — */
   @media (max-width: 800px) {
-    .hero-card {
-      grid-template-columns: 1fr;
-      gap: clamp(16px, 3vh, 24px);
-      padding-top: clamp(60px, 8vh, 84px);
-      padding-bottom: clamp(20px, 4vh, 32px);
-    }
-
-    /* Tighter floor than the desktop clamp(60px, 8vh, 90px) — on short
-       mobile viewports (address bar visible) every saved pixel here
-       keeps the whole hero inside the first screen instead of spilling
-       a few px past it. */
-    .hero-utility {
-      padding-bottom: clamp(28px, 5vh, 60px);
+    #hero {
+      justify-content: flex-start;
     }
 
     .hero-jasmine {
-      max-height: 26vh;
-      max-width: 170px;
-      margin: 0 auto;
+      display: none;
+    }
+
+    /* A single corner sprig, cropped to its top portion and cropped in
+       tight so it reads as a small flourish rather than the full stem,
+       rotated for a hand-placed feel, and faded at the inner edge via the
+       mask so it has no visible rectangle — just gold linework fading into
+       the page from the corner. Confined to .hero-card's own box (not
+       #hero's), so it can never drift into the countdown/scroll area. */
+    .hero-corner-flourish {
+      display: block;
+      position: absolute;
+      bottom: -16px;
+      right: -20px;
+      width: clamp(84px, 28vw, 130px);
+      height: auto;
+      object-fit: cover;
+      object-position: 30% 15%;
+      aspect-ratio: 553 / 620;
+      transform: rotate(-16deg);
+      mix-blend-mode: darken;
+      /* Was 0.06 — but `opacity` dilutes the *whole* blended result, so at
+         6% even the flourish's darkest gold linework only nudged the cream
+         backdrop by ~2%, which is invisible in practice, not just subtle.
+         18% is the floor where it actually reads as an intentional accent
+         rather than nothing. */
+      opacity: 0.18;
+      -webkit-mask: radial-gradient(ellipse 65% 65% at 68% 32%, #000 45%, transparent 92%);
+      mask: radial-gradient(ellipse 65% 65% at 68% 32%, #000 45%, transparent 92%);
+      pointer-events: none;
+    }
+
+    .hero-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1 1 auto;
+      padding: 0 clamp(20px, 5vw, 60px);
     }
 
     .hero-content {

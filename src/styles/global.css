@@ -120,6 +120,23 @@ section:not(#hero) {
   opacity: 0.5;
 }
 
+/* — Envelope-card frame (mobile only) —
+   A thin gold hairline inset a few px from the screen edge, fixed so it
+   holds steady while the page scrolls beneath it — like reading the whole
+   site inside one card/envelope rather than a plain scrolling page. Sits
+   below the nav (z-index 100) so the nav simply reads as sitting inside
+   the frame, and is pointer-events:none so it never intercepts taps. */
+@media (max-width: 800px) {
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 10px;
+    border: 1px solid rgba(200, 169, 110, 0.32);
+    pointer-events: none;
+    z-index: 90;
+  }
+}
+
 /* — Respect users who prefer less motion — */
 @media (prefers-reduced-motion: reduce) {
   *,

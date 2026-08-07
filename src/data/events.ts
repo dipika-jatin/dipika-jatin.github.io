@@ -21,7 +21,7 @@ export const eventDays: EventDay[] = [
         name: 'Guest Check-in & Welcome Breakfast',
         venueName: 'Kenilworth Hotel, Kolkata',
         description:
-          'Settle in, say hello and start the celebrations with a warm welcome breakfast.',
+          'Settle in, say hello and start the celebrations.',
       },
       {
         time: '2:00 PM',
