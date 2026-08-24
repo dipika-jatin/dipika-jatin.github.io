@@ -1,0 +1,52 @@
+---
+import { wedding } from '../data/wedding';
+---
+
+<footer>
+  <span class="ftmono">{wedding.monogram}</span>
+  <p class="ftdate">{wedding.dateLabel} &middot; {wedding.city.toUpperCase()}</p>
+  <div class="ftdiv" aria-hidden="true"></div>
+  <p class="ftnote">Made with love &#9829;</p>
+</footer>
+
+<style>
+  footer {
+    background: var(--charcoal);
+    padding: clamp(40px, 7vh, 60px) clamp(20px, 5vw, 48px);
+    text-align: center;
+  }
+
+  .ftmono {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(40px, 6vw, 56px);
+    color: var(--gold);
+    opacity: 0.85;
+    margin-bottom: 14px;
+    display: block;
+    letter-spacing: 0.04em;
+  }
+
+  .ftdate {
+    font-family: var(--sans);
+    font-size: clamp(11px, 1.5vw, 13px);
+    font-weight: 300;
+    color: rgba(200, 169, 110, 0.55);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .ftdiv {
+    width: 36px;
+    height: 1px;
+    background: rgba(200, 169, 110, 0.28);
+    margin: 18px auto;
+  }
+
+  .ftnote {
+    font-size: 11px;
+    color: rgba(200, 169, 110, 0.28);
+    letter-spacing: 0.1em;
+  }
+</style>

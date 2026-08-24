@@ -1,0 +1,151 @@
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--sans);
+  color: var(--text);
+  background: var(--ivory);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* Screen-reader-only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* — Site wrapper — */
+#site {
+  background: var(--ivory);
+  /* `100vh` on mobile browsers (Chrome/Samsung Internet) is measured
+     against the *largest* possible viewport (address bar hidden), which is
+     taller than what's actually visible on first paint. `100dvh` tracks the
+     real, currently-visible viewport so the wrapper never claims height the
+     device isn't actually showing. Falls back to 100vh on older browsers. */
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: var(--sans);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* — Reveal-on-scroll helper — */
+.rv {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s, transform 0.8s;
+}
+
+.rv.on {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.d1 { transition-delay: 0.1s; }
+.d2 { transition-delay: 0.2s; }
+
+/* — Section primitives shared across sections — */
+/* #hero manages its own padding entirely (see Hero.astro) — it must be
+   excluded here rather than "overridden" from the component, because CSS
+   minifiers will happily collapse an explicit `padding: 78px 0 0` back
+   down to `padding-top: 78px` (treating the zeroed sides as redundant),
+   which silently lets this rule's padding-bottom leak back in and pushes
+   the hero taller than one screen on mobile. */
+section:not(#hero) {
+  padding: clamp(60px, 10vw, 100px) clamp(20px, 5vw, 48px);
+}
+
+.seye {
+  font-size: clamp(9px, 1.2vw, 11px);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold-d);
+  text-align: center;
+  margin-bottom: 12px;
+  font-weight: 400;
+}
+
+.stitle {
+  font-family: var(--serif);
+  font-size: clamp(30px, 5vw, 50px);
+  font-weight: 400;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.1;
+  margin-bottom: 14px;
+}
+
+.sdiv {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: clamp(40px, 7vh, 64px);
+}
+
+.sdivl {
+  width: 55px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.5;
+}
+
+/* — Envelope-card frame (mobile only) —
+   A thin gold hairline inset a few px from the screen edge, fixed so it
+   holds steady while the page scrolls beneath it — like reading the whole
+   site inside one card/envelope rather than a plain scrolling page. Sits
+   below the nav (z-index 100) so the nav simply reads as sitting inside
+   the frame, and is pointer-events:none so it never intercepts taps. */
+@media (max-width: 800px) {
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 10px;
+    border: 1px solid rgba(200, 169, 110, 0.32);
+    pointer-events: none;
+    z-index: 90;
+  }
+}
+
+/* — Respect users who prefer less motion — */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .rv { opacity: 1; transform: none; }
+}

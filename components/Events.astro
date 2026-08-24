@@ -1,0 +1,176 @@
+---
+import { eventDays } from '../data/events';
+---
+
+<section id="events" aria-labelledby="events-title">
+  <p class="seye rv">The Celebrations</p>
+  <h2 id="events-title" class="stitle rv d1">Events &amp; Schedule</h2>
+  <div class="sdiv rv d2" aria-hidden="true">
+    <div class="sdivl"></div>
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+      <path
+        d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2L8 0Z"
+        fill="var(--gold)"
+      />
+    </svg>
+    <div class="sdivl"></div>
+  </div>
+
+  <div class="evgrid">
+    {eventDays.map((day) => (
+      <div class="evday">
+        <header class="evdh">
+          <div class="evdn">{day.day}</div>
+          <div class="evdm">{day.monthYear}</div>
+        </header>
+        {day.events.map((event, idx) => (
+          <div class="evi">
+            <div class="evdc" aria-hidden="true">
+              <div class="evdot"></div>
+              {idx < day.events.length - 1 && <div class="evln"></div>}
+            </div>
+            <div class="evinf">
+              <div class="evtime">{event.time}</div>
+              <div class="evname">{event.name}</div>
+              <div class="evven">{event.venueName}</div>
+              <div class="evdesc">{event.description}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  #events {
+    background: var(--cream);
+  }
+
+  .evgrid {
+    max-width: 980px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  @media (max-width: 680px) {
+    .evgrid { grid-template-columns: 1fr; }
+    .evday:first-child {
+      border-right: none !important;
+      border-bottom: 1px solid rgba(200, 169, 110, 0.3);
+      padding-bottom: 40px;
+      margin-bottom: 40px;
+    }
+  }
+
+  .evday {
+    padding: 0 clamp(16px, 4vw, 48px);
+  }
+
+  .evday:first-child {
+    border-right: 1px solid rgba(200, 169, 110, 0.3);
+  }
+
+  .evdh {
+    text-align: center;
+    padding-bottom: 36px;
+    margin-bottom: 36px;
+    border-bottom: 1px solid rgba(200, 169, 110, 0.3);
+  }
+
+  .evdn {
+    font-family: var(--serif);
+    font-size: clamp(42px, 7vw, 58px);
+    font-weight: 300;
+    color: var(--wine);
+    line-height: 1;
+  }
+
+  .evdm {
+    font-size: clamp(10px, 1.3vw, 11px);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-d);
+    margin-top: 4px;
+  }
+
+  .evi {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 32px;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+
+  .evi.on {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .evdc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4px;
+  }
+
+  .evdot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(200, 169, 110, 0.2);
+  }
+
+  .evln {
+    width: 1px;
+    flex: 1;
+    margin-top: 5px;
+    background: linear-gradient(180deg, rgba(200, 169, 110, 0.4), transparent);
+    min-height: 28px;
+  }
+
+  .evinf {
+    flex: 1;
+  }
+
+  .evtime {
+    display: inline-flex;
+    align-items: center;
+    font-size: clamp(9px, 1.2vw, 10px);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-d);
+    margin-bottom: 8px;
+    padding: 5px 10px 5px 12px;
+    border: 1px solid rgba(200, 169, 110, 0.42);
+    border-radius: 999px;
+    background: rgba(245, 240, 230, 0.58);
+  }
+
+  .evname {
+    font-family: var(--serif);
+    font-size: clamp(18px, 2.5vw, 22px);
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .evven {
+    font-size: clamp(10px, 1.2vw, 11px);
+    letter-spacing: 0.05em;
+    color: var(--wine);
+    margin-bottom: 4px;
+  }
+
+  .evdesc {
+    font-size: clamp(12px, 1.5vw, 13px);
+    font-weight: 300;
+    color: var(--text-l);
+    line-height: 1.65;
+  }
+
+</style>
