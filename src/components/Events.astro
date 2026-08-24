@@ -139,11 +139,17 @@ import { eventDays } from '../data/events';
   }
 
   .evtime {
+    display: inline-flex;
+    align-items: center;
     font-size: clamp(9px, 1.2vw, 10px);
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--gold-d);
-    margin-bottom: 3px;
+    margin-bottom: 8px;
+    padding: 5px 10px 5px 12px;
+    border: 1px solid rgba(200, 169, 110, 0.42);
+    border-radius: 999px;
+    background: rgba(245, 240, 230, 0.58);
   }
 
   .evname {
@@ -166,4 +172,5 @@ import { eventDays } from '../data/events';
     color: var(--text-l);
     line-height: 1.65;
   }
+
 </style>

@@ -18,13 +18,13 @@ export const eventDays: EventDay[] = [
     events: [
       {
         time: '11:00 AM onwards',
-        name: 'Guest Check-in & Welcome Breakfast',
+        name: 'Guest Check-in',
         venueName: 'Kenilworth Hotel, Kolkata',
         description:
-          'Settle in, say hello and start the celebrations.',
+          'Settle in and get ready for the celebrations ahead.',
       },
       {
-        time: '2:00 PM',
+        time: '1:00 PM',
         name: 'Haldi Ceremony',
         venueName: 'Kenilworth Hotel, Kolkata',
         description:

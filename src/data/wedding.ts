@@ -9,7 +9,7 @@ export const wedding = {
   monogram: 'D & J',
 
   /**
-   * Celebrations begin — Guest Check-in & Welcome Breakfast on the 20th,
+   * Celebrations begin with Guest Check-in on the 20th,
    * pinned to Asia/Kolkata (IST = UTC+05:30). This is a two-day event
    * (Haldi & Sangeet on the 20th, Mehendi/Varmala/Wedding on the 21st), so
    * the countdown targets the start of the *first* day, not just the

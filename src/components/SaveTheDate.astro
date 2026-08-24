@@ -31,9 +31,30 @@ import CalendarShare from './CalendarShare.astro';
 
 <style>
   #save-the-date {
-    background: var(--wine);
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(226, 201, 138, 0.13) 0%, transparent 28%),
+      radial-gradient(circle at 88% 82%, rgba(226, 201, 138, 0.1) 0%, transparent 30%),
+      linear-gradient(135deg, var(--wine-d) 0%, var(--wine) 48%, #661d2c 100%);
     text-align: center;
     padding: clamp(60px, 10vw, 100px) clamp(20px, 5vw, 48px);
+    box-shadow:
+      inset 0 1px 0 rgba(226, 201, 138, 0.35),
+      inset 0 -1px 0 rgba(90, 24, 38, 0.65);
+  }
+
+  #save-the-date::before {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border: 1px solid rgba(226, 201, 138, 0.18);
+    pointer-events: none;
+  }
+
+  #save-the-date > * {
+    position: relative;
+    z-index: 1;
   }
 
   #save-the-date .seye { color: rgba(200, 169, 110, 0.75); }
