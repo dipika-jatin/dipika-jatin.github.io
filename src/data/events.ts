@@ -17,14 +17,14 @@ export const eventDays: EventDay[] = [
     monthYear: 'NOVEMBER · 2026',
     events: [
       {
-        time: '11:00 AM onwards',
+        time: '10:30 AM onwards',
         name: 'Guest Check-in',
         venueName: 'Kenilworth Hotel, Kolkata',
         description:
           'Settle in and get ready for the celebrations ahead.',
       },
       {
-        time: '1:00 PM',
+        time: '11:30 AM',
         name: 'Haldi Ceremony',
         venueName: 'Kenilworth Hotel, Kolkata',
         description:
